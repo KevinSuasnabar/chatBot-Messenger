@@ -5,6 +5,8 @@ require('dotenv').config(); //extraemos las credenciales del archivo .env
 //importamos el servicio de envio
 const actions = require("./services/actions");
 
+const handle=require("./services/hadleMessages");
+
 const app=express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
@@ -54,10 +56,14 @@ app.post("/webhook",(req,res)=>{
             let webhookEvent=entry.messaging[0];
             console.log(webhookEvent);
 
+            //maneja el tipo de mensaje que nos envia
+            handle.handleMessage(webhookEvent);
+
             //usamos el servicio actions importado
-            actions.sendTextMessage("Este es mu chatBot hola Mundo!",webhookEvent);
+            //actions.sendTextMessage("Este es mu chatBot hola Mundo!",webhookEvent);
         });
     }else{
+        console.log("hay error");
         res.sendStatus(404);
     }
 });
